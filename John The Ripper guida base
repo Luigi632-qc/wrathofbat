@@ -1,0 +1,31 @@
+Il nostro file SAM di esempio contiene gli hash di quattro utenti Windows:
+
+Administrator:500:00000000000000000000000000000000:A1F666E43A1DFFE40B96201AFDD26CF3:Account predefinito per l'amministrazione del computer/dominio::
+Guest:501:00000000000000000000000000000000:00000000000000000000000000000000:Account predefinito per l'accesso come utente ospite al computer/dominio::
+Gaz:1000:00000000000000000000000000000000:0130FA6701FAB7E584FBF4634EF27B76:::
+Test_HTML_psw:1000:579DA0AF433BC64A3832C92FC614B7D1:B0214CFC129F0AF9AD7A992241280E3E:::
+
+I primi due sono gli utenti creati di default dal sistema operativo in fase di installazione (lo sappiamo dal codice 500 presente dopo il nome utente). 
+Il terzo è il mio utente mentre, ed il quarto è un utente creato appositamente per questa guida (il loro codice identificativo 1000 ci indica che sono stati creati dall’utente del PC).
+
+Noi ci concentreremo sul quarto.
+
+La prima stringa di zeri ci dice che abbiamo il file SAM di una machina su cui è istallata una versione di Windows 7 o superiore. La seconda stringa ci dice che l’hash è di tipo NT.
+
+Quindi cerchiamo di usare John per attaccare l’hash della password.
+
+Avviamo la macchina con Kali Linux, creiamo un file winhash.txt in una cartella a piacere (nel nostro esempio, l’abbiamo creata sul Desktop) e copiamo al suo interno il contenuto del file SAM relativo all’utente GAZ. 
+Apriamo quindi una shell e digitiamo:
+
+john --format=NT ~/Desktop/winhash.txt
+
+Nel comando precedente:
+
+    --format = NT indica a John con quale formato gli abbiamo fornito l’hash della password;
+    ~/Desktop/winhash.txt è il path del file che contiene gli hash estratti dal file SAM.
+
+Per velocizzare la ricerca, possiamo fornire a John il nostro dizionario, specificando l’opzione --wordlist.
+
+Dopo pochi minuti, John mostrerà la password del nostro bersaglio.
+
+L’utente Test_HTML_psw ha come password HTML_psw. Da questo momento, potremo accedere a questa macchina con delle credenziali lecite, senza destare sospetti e tentare una escalation di privilegi per compromettere definitivamente il PC. 
