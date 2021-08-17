@@ -1,0 +1,104 @@
+Guida aircrack – ng
+
+Qualche piccolo cenno per testare la vostra e non quella altrui perchè illegale. Rete WiFi con chiave WEP (Wired Equivalent Privacy – standard che specifica il protocollo utilizzato per rendere sicure le trasmissioni radio delle reti Wi-Fi) e WPA (Wi-Fi Protected Access – protocollo di sicurezza per reti senza fili) .
+Il software è gratuito sia per Windows che per Linux. Il più facile da usare per la miglior presenza di driver per scheda di rete e usabilità a riga di comando.
+Prenderemo in considerazione Linux Ubuntu sistema molto popolare, ma e’ già inserito in Backtrack 5. Procediamo installando il software aircrack-ng in questo modo, apriamo una shell e digitiamo quanto segue:
+wget http://download.aircrack-ng.org/aircrack-ng-0.9.3.tar.gz
+tar -zxvf aircrack-ng-0.9.3.tar.gz
+cd aircrack-ng-0.9.3
+make
+make install
+questo installerà aircrack-ng.
+Ora apriamo una shell e diventiamo root (amministratori) ed iniziamo con modificare gli attributi della nostra scheda di rete mettendola in monitor mode. Cioè in maniera che possa ricevere tutti i dati provenienti da altre reti e che ha la possibilità di iniettare dei pacchetti da noi verso le altre schede quindi digitate :
+
+aircrack airmon
+airmon-ng start wlan0
+
+Questa istruzione genera un alias della rete wifi in genere “mon0” che protrai utilizzare, in questo caso è come se avessi un’altra scheda di rete ma abilitata in monitor mode.
+Per assicurarti della buona riuscita dell’operazione digita nella shell:
+iwconfig mon0
+E assicurarsi che l’opzione Mode sia settata a “Monitor MODE”.
+Ora se la scheda è settata e non ci sono errori si comincia altrimenti vi rimando a una ricerca con Google  per sistemare gli errori.
+
+Tutto Ok bene cominciamo a guardarci attorno e lanciamo il seguente comando:
+airodump-ng Mon0
+
+ora si aprirà sulla stessa shell, una schermata e dopo alcuni secondi se ci sono delle reti nelle vicinanze cominceranno ad apparire con i loro nomi e molti altri dati che ci serviranno più tardi, ecco la schermata come appare.
+
+aircrack airodump
+
+Il blocco superiore dei dati mostra gli Access Point “detti anche “AP” individuati:
+
+BSSID – L’indirizzo MAC dell’AP
+PWR – La forza del segnale. Alcuni driver non la riportano
+Beacons – Numero di beacon frames ricevuto. Se non avete la forza del segnale, potete stimarla dal numero di beacon: più sono I beacon, migliore é la qualità  del segnale.
+Data – Numero di frammenti di dati ricevuti
+CH – Canale su cui opera l’AP
+MB – Velocità  massima supportata dall’ AP, se e’ 11 é 802.11b, se e’ 54 e’ dell’802.11g. I valori intermedi rappresentano un misto.
+ENC – Cifratura: OPN: nessuna cifratura, WEP: cifratura WEP, WPA: cifratura WPA o WPA2, (WEP?: WEP o WPA (non si sa ancora))
+ESSID – Il nome della rete. A volte e’ nascosto.
+
+Il blocco dati inferiore i client rilevati:
+
+BSSID – Il MAC dell’AP a cui e’ associato il client
+STATION – Il MAC del client stesso
+PWR – La forza del segnale. Alcuni driver non la riportano
+Packets – Numero di frammenti di dati ricevuti
+Probes – Nomi di rete (ESSID) che questo client ha rilevato.
+
+Ora cerchiamo una rete WEP con un client associato, prendiamo appunti del canale usato, del bssid digitiamo in una nuova finestra :
+airodump-ng -c 11 – -bssid 00:00:00:00:00:00 -w dump mon0
+
+-w dump salva un file di nome dump (dump puo’ essere nu nome qualsiasi) che conterrà dati raccolti per il recupero della password.
+Prima di craccare la rete WEP airodmp-ng deve catturare almeno 250.000/500.000 iv (Vettori d’Inizializzazione) o anche detti pacchetti dati. Ora potete provare a craccare con il seguente comando in un altra shell lasciando lavorare comunque airodump.
+aircrack-ng -b 00:00:00:00:00:00 dump*.cap
+
+(asterisco perchè quando il file dump viene salvato viene aggiunto una numerazione)
+
+-b 00:00:00:00:00:00 e’ il bssid da attaccare e dump*.cap e’ il file in cui abbiamo catturato i pacchetti e a fine lavoro la schermata si presenterà cosi
+
+aircrack aircrack-ng
+
+a KEY FOUND togliere tutti i 2 punti e la password e’ trovata.
+WPA
+
+Innanzitutto vi ricordo che la rete dev’essere vostra o comunque di qualcuno che vi autorizza, lo scopo di questa guida è di mettere alla prova la sicurezza della rete e nient’altro.
+iniziamo
+
+La WPA e’ una chiave molto più robusta della WEP e per ora si può attaccare solo con attacco a dizionario che dovete procuravi. Uno piccolo lo potrete trovare qui, comunque in rete se ne trovano moltissimi.
+Solo dopo aver catturato l’handshake (processo attraverso il quale due computer, tramite software o hardware, stabiliscono le regole comuni, ovvero la velocità, i protocolli di compressione, di criptazione, di controllo degli errori) della vittima.
+
+Lasciamo perdere tutto quanto fatto fino adesso con chiave WEP e iniziamo nuovamente, questo per migliorare la manualità di scrittura e per facilitare l’apprendimento dei meno esperti.
+
+Diventiamo Root, ormai se siamo arrivati fino a qua dovremmo saperlo.
+airmon-ng start wlan0
+
+Questa istruzione genera un alias della rete wifi in genere “mon0” che protrai utilizzare, in questo caso è come se avessi un’altra scheda di rete ma abilitata in monitor mode.
+Per assicurarti della buona riuscita dell’operazione digita nella shell:
+iwconfig mon0
+E assicurarsi che l’opzione Mode sia settata a “Monitor MODE”.
+Ora se la scheda e’ settata e non ci sono errori si comincia altrimenti vi rimando a una ricerca con Google per sistemare gli errori.
+
+Ora cerchiamo un bersaglio e quindi scandagliamo la rete con Airodump-ng mon0 (mon0 e’ l’alias generato da Airmon-ng start wlan0). Visualizzerà tutte le reti nel raggio di ricezione della nostra rete WiFi, su che canale sono e se ci sono dei client collegati (utenti collegati al router).
+
+Andiamo nel più specifico e dopo aver scelto il bersaglio, analizzeremo solo il medesimo e salveremo in un file i pacchetti dell’ handshake che ci serviranno per trovare la password, digitiamo:
+
+Airodump-ng -c (in questo spazio senza parentesi scriviamo il n° del canale esempio 11) -bssid (mac adress del router (AP) esempio 00:11:22:33:44:55) -w (nome del file da salvare esempio: dump) mon0 (scriveremo il nome della scheda settata in monitor mode esempio mon0). Digitiamo tutto senza le parentesi e diamo invio.
+airodump-ng -c 11 –bssid 00:11:22:33:44:55 -w dump mon0
+
+comincia ora a lavorare e a salvare.
+se c’e’ un client commesso con una buona dose di traffico internet non avrete difficcoltà a catturare l’handshake, se c’e’ poco traffico invece bisognerà forzarlo, in che modo, con un attacco da parte nostra di forzatura di autentificazione:
+
+apriamo un’altra shell e digitiamo aireplay-ng -0 50 -a (mac adress router) -c (mac client) mon0 (scheda in monitor mode che ora spedira’ pacchetti) e invio.
+aireplay-ng -0 50 -a 00:11:22:33:44:55 -c 00:00:00:00:00:00 mon0
+
+osservate ora la shell di airodump-ng dove stiamo catturando l’handshake come aumenteranno i pacchetti. Il numero 50 di aireplay-ng e’ il numero di attacchi che potrete cambiare in base alle esigenze. Nella shell di cattura se verrà catturato l’handshake verrà visualizzato in alto a destra
+
+aircrack aireplay-ng
+
+aircrack handshake
+
+Una volta catturato l’handshake possiamo chiudere tutte le finestre attive, possiamo chiudere internet se vogliamo. Ora lavoreremo in locale, apriamo una nuova shell e daremo in pasto ad aircrack-ng i pacchetti salvati digitando:
+aircrack-ng -w (nome dizionario) -b (mac router attaccato) nomefile*.cap
+
+i file catturati avranno il nome dato da noi più un numero progressivo se salvati in più volte, ecco perchè nomefile*. I file salvati saranno nella directori Home e i dizionario lo dovete mettere il quella directori o inserire il percorso di dove lo collocate.
