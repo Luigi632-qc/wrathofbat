@@ -1,0 +1,42 @@
+Cracking Passwords
+
+illustrated visual of john the ripper modes
+
+John the Ripper’s primary modes to crack passwords are single crack mode, wordlist mode, and incremental. The single crack mode is the fastest and best mode if you have a full password file to crack. Wordlist mode compares the hash to a known list of potential password matches. Incremental mode is the most powerful and possibly won’t complete. This is your classic brute force mode that tries every possible character combination until you have a possible result.
+
+The easiest way to try cracking a password is to let JtR go through a series of common cracking modes. This command below tells JtR to try “simple” mode, then the default wordlists containing likely passwords, and then “incremental” mode.
+
+    .\john.exe passwordfile
+
+You can also download different wordlists from the Internet, and you can create your own new wordlists for JtR to use with the –wordlist parameter.
+
+    .\john.exe passwordfile –wordlist=”wordlist.txt”
+
+If you want to specify a cracking mode use the exact parameter for the mode.
+
+    .\john.exe --single passwordfile 
+    .\john.exe --incremental passwordfile
+
+Word Mangling Rules
+
+Mangling is a preprocessor in JtR that optimizes the wordlist to make the cracking process faster. Use the –rules parameter to set the mangling rules.
+
+    .\john.exe --wordlist=”wordlist.txt” --rules --passwordfile
+
+Viewing Your Output
+
+When you want to see the list of passwords that you have cracked, use the –show parameter.
+
+    .\john.exe –show passwordfile
+
+If your cracked password list is long, you can filter the list with additional parameters. You can also redirect the output using basic redirection in your shell. For example, if you want to see if you cracked any root users (UID=0) use the –users parameter.
+
+    .\john.exe --show --users=0 passwordfile
+
+Or if you want to show users from privileged groups use –groups.
+
+    .\john.exe –-show –-groups=0,1 passwordfile
+
+Below is the JtR command from our Live Cyber Attack Webinar. In this scenario, our hacker used kerberoast to steal a Kerberos ticket granting ticket(TGT) containing the hash to be cracked, which was saved in a file called ticket.txt. In our case, the wordlist used is the classic rockyou password file from Kali Linux, and the command was set to report progress every 3 seconds.
+
+    .\john.exe "--format=krb5tgs" "ticket.txt" "--wordlist=”rockyou.txt" "--progress-every=3"
