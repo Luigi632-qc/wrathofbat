@@ -1,0 +1,51 @@
+Wireshark è probabilmente l’analizzatore di pacchetti più conosciuto e utilizzato; è gratis, open source ed è disponibile per Windows, MAC OS X e Linux. 
+Il software può catturare, salvare, importare ed esportare i pacchetti di rete; include un sistema di filtraggio completo e colori diversificati in base al tipo di pacchetto catturato.
+Dopo averlo installato, bisogna scegliere quale interfaccia analizzare e su cui sniffare i pacchetti. Le interfacce disponibili sono quelle attive sul nostro computer, io ho utilizzato una chiavetta esterna, ho creato un hotspot in kali e connesso alcuni dispositivi. 
+Se siete alle prime armi, vi consiglio di fare come ho fatto io, collegando magari solo un dispositivo e navigare per qualche minuto. Poi fermare il software e iniziare ad analizzare i pacchetti trovati.
+L’interfaccia di Wireshark non è complessa, basta capire dove sono i comandi principali e che si useranno maggiormente, con il tempo verrà automatico sapere cosa serve e dove trovarlo.
+
+Analisi di un pacchetto
+
+Dopo aver catturato per un pò di tempo, abbiamo a disposizione migliaia di pacchetti. 
+Le informazioni che Wireshark ci da sono molte, ecco le principali.
+
+    packethome
+
+    No: numero del pacchetti, sono ordinati in base al tempo di arrivo;
+    Time: tempo di arrivo del pacchetto;
+    Source: l’indirizzo da cui il pacchetto arriva;
+    Destination: l’indirizzo a cui è andato il pacchetto;
+    Protocol: il tipo di protocollo che sta utilizzando, in questo caso è una richiesta HTTP;
+    Lenght: lunghezza del pacchetto;
+    Info: informazioni aggiuntive, in questo caso mostra che è una richiesta GET.
+    
+    packetdetails
+
+Il pannelo dei dettagli del pacchetto è diviso in base al modello OSI e cambia di pacchetto in pacchetto. 
+Il frame contiene bytes e, se espandiamo, le informazioni che possono esserci utili ,ad esempio, sono i protocolli presenti nel frame analizzato e la stringa da utilizzare nel filtro per visualizzare pacchetti simili.
+L’indirizzo di destinazione e la sorgente, con modello e tanto di mac address.
+Tipo di protocollo utilizzato, flags, Time to live e altre informazioni del livello di rete. ( per approfondire i livelli di rete : https://it.wikipedia.org/wiki/Livello_di_rete )
+
+Livello di Trasporto: in questo caso utilizzo TCP;
+
+Livello di Applicazione: per esempio  l’host raggiunto, l’user agent del mittente e anche i cookie salvati.
+
+Filtrare i pacchetti
+
+Per poter analizzare approfonditamente il traffico e selezionare un’obbiettivo bisogna necessariamente utilizzare il sistema di filtraggio. 
+Le stringhe di ricerca sono molte, e ne esistono di ogni tipo.
+
+Per iniziare, seleziono l’indirizzo ip sorgente che mi interessa, tramite la query.
+
+Strumenti utili
+
+Nella sezione Statistics possiamo trovare altre informazioni che ci possono essere utili, una di esse sono le richieste HTTP; vengono mostrati tutti i siti visitati, che possiamo poi approfondire se applichiamo il loro indirizzo IP come filtro.
+
+httpget
+
+Altri strumenti simili a Wireshark possono essere:
+
+    HTTPWatch: è un software che può essere integrato con i maggiori browser ed analizza le interazioni tra il browser e il server richiesto;
+    Dumpcap: permette di catturare pacchetti di rete live e salvarli in file pcap. Come wireshark, ma a linea di comando;
+    Tshark;
+    Mergecap: permette di unire diversi file pcap in un unico file.
