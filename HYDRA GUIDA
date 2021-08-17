@@ -1,0 +1,58 @@
+ Hydra supporta il cracking delle password su oltre 40 servizi. Noi vedremo come effettuare questo tipo di attacco sfruttando i seguenti servizi:
+
+    Desktop Remoto (RDP);
+    Condivisione di File e Stampanti tramite Samba (SMB).
+
+Attaccare i servizi con Hydra
+
+ Hydra è un password cracker veloce e flessibile, che supporta un’ampia gamma di protocolli di rete. In questa lezione lo useremo da riga di comando.
+Attacco al protocollo di desktop remoto di Windows 7
+
+Proveremo ora ad eseguire un attacco con password dalla macchina Kali contro il computer Windows 7. Abbiamo abilitato il servizio RDP e abbiamo impostato la password dell’amministratore su Q2W3E4R5. Ciò consentirà ad un utente remoto di stabilire una connessione desktop remoto con questa macchina utilizzando le credenziali impostate.
+
+Apriamo un terminale nella macchina attaccante e lanciamo il seguente comando:
+
+hydra -l GAZ -P /root/Desktop/dizionario.txt -t 4 192.168.1.102 rdp
+
+
+Commentiamo la stringa appena digitata:
+
+    -l
+
+    Copy
+    indica il nome utente da attaccare (nel nostro caso GAZ; va inserito quello creato sulla macchina virtuale);
+    -P indica il path del dizionario;
+    -t rappresenta il numero di tentativi contemporanei;
+    192.168.1.102 è l’indirizzo IP della macchina bersaglio (se nel nostro caso ne è utilizzato uno diverso, questo campo va aggiornato di conseguenza);
+    rdp indica a Hydra il protocollo da attaccare.
+
+Se tutto è impostato correttamente, dovremmo trovarci in una situazione simile alla seguente.
+
+Come si vede, Hydra ha scoperto con successo la password utilizzata dall’account amministratore del computer bersaglio utilizzando un attacco a dizionario.
+Attacco al protocollo di condivisione di file e stampanti di Windows 7
+
+In questa sezione, eseguiremo un attacco simile a quello descritto nella sezione precedente. Questa volta, però, eseguiremo un attacco a dizionario contro il protocollo SMB (attivato durante la preparazione del computer Windows 7).
+
+Apriamo un terminale nella macchina attaccante e lanciamo il seguente comando:
+
+hydra -l GAZ -P /root/Desktop/dizionario.txt -t 4 192.168.1.102 smb
+
+Commentiamo la stringa appena digitata:
+
+    -l indica il nome utente da attaccare (nel nostro caso GAZ; va inserito quello creato sulla macchina virtuale);
+    -P indica il path del dizionario;
+    -t rappresenta il numero di tentativi contemporanei;
+    192.168.1.102 è l’indirizzo IP della macchina bersaglio (se nel nostro caso ne è utilizzato uno diverso, questo campo va aggiornato di conseguenza);
+    smb indica a Hydra il protocollo da attaccare.
+
+Se abbiamo impostato tutto correttamente, dovremmo trovarci in una situazione simile alla seguente:
+
+Come potete vedere dall’output precedente, Hydra ha infranto con successo la password dell’utente amministratore della macchina bersaglio tramite il protocollo SMB. La password trovata è “Q2W3E4R5”.
+
+Conclusioni
+
+Se viene scelta una password debole per il nostro utente amministratore, essa può facilmente essere scoperta da terzi senza che si abbia la possibilità di rendersi conto della violazione.
+
+L’anello debole di qualsiasi sistema di sicurezza è costituito dalle persone che lo gestiscono. 
+L’utente deve essere consapevole che è l’unico responsabile negli accessi. Deve utilizzare una password sicura (magari generata utilizzando un tool), evitando di scriverla su un foglio di carta e/o di memorizzarla su file non protetti e facilmente accessibili. 
+La password deve essere complessa per scoraggiare questo tipo di attacchi e non deve essere deducibile dalle nostre abitudini o hobby. 
