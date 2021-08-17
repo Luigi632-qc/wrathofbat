@@ -1,0 +1,29 @@
+When debugging (diagnosing) an IP telephony service, it is very difficult to analyze VoIP traffic. Is there a more convenient and efficient way to debug VoIP using the Wireshark traffic analyzer?
+
+The Wireshark program implements a convenient mechanism for diagnosing (analyzing) VoIP calls, in particular, you can get a graphical diagram of calls and see how data was exchanged. Wireshark allows you to analyze the SIP protocol and its RTP traffic.
+
+Suppose that during the execution of a VoIP call using Wireshark, network packets were captured and this dump should be analyzed.
+
+ 
+
+Walktrough Steps:
+
+1. Select a SIP or RTP packet from the list (in our example, analyze the RTP traffic). To filter packets, you can enter a value in the Filter field.   sip or rtp to display only a certain type of traffic.
+
+2. Go to the Statistics menu (or Telephony , depending on the version of the program) > VoIP Calls .
+The VoIP Calls window opens with a list of VoIP calls.
+
+The list of VoIP calls shows the following information for each call:  
+
+        Start Time: The time the call started. 
+        Stop Time: The end time of the call.  
+        Initial Speaker: The IP address of the packet source that initiated the call.
+        From: For SIP calls, the INVITE request is displayed in the "From" field.  
+        To: For SIP calls, the INVITE request is displayed in the "To" field.
+        Protocol: Protocol.  
+        Packets: The number of packets participating in the call.  
+        State: Call status.
+        Comment: Additional comments.
+
+3. Select a VoIP call and then click the Graph button (or Flow , depending on the version of the program). The Graph Analysis window will appear with a graphical diagram of the VoIP call data exchange.
+
